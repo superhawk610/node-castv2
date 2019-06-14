@@ -1,10 +1,15 @@
 var Client = require("../..").Client;
 var mdns = require("multicast-dns")();
 
+var connected = false;
+
 mdns.on("response", function(res) {
   var service = parseresponse(res);
   console.log("found device", service);
-  // ondeviceup(service.host);
+  if (service.host && !connected) {
+    console.log("connecting to", service);
+    ondeviceup(service.host);
+  }
 });
 
 mdns.query("._googlecast._tcp.local", "ANY");
